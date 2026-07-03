@@ -509,7 +509,7 @@ function setupEventListeners() {
         hsl: { h: color.h, s: color.s, l: color.l },
         locked: false
       });
-      generatePalette(true);
+      renderPalette();
     } else {
       showToast('最多支援 8 種色彩', 'error');
     }
@@ -520,7 +520,7 @@ function setupEventListeners() {
       state.colorCount--;
       elements.colorCountNum.textContent = state.colorCount;
       state.colors.pop();
-      generatePalette();
+      renderPalette();
     } else {
       showToast('最少需要 2 種色彩', 'error');
     }
