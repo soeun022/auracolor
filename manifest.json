@@ -1,0 +1,24 @@
+{
+  "name": "AuraColor 漸變配色卡",
+  "short_name": "AuraColor",
+  "description": "設計、調整、鎖定並儲存你喜愛的配色卡。精美漸變與調色盤工具，支援離線與 PWA 安裝。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F7F5F2",
+  "theme_color": "#635E5C",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

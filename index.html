@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraColor | 漸變與調色盤 PWA</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#635E5C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AuraColor">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="AuraColor 是一個為設計師與開發者打造的頂級配色卡產生器。支援色系鎖定、細部數值調整、儲存色卡，並具備離線操作與 PWA 安裝功能。">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Dynamic Color Mesh Background -->
+  <div id="mesh-background" class="mesh-background">
+    <div class="mesh-circle circle-0"></div>
+    <div class="mesh-circle circle-1"></div>
+    <div class="mesh-circle circle-2"></div>
+    <div class="mesh-circle circle-3"></div>
+    <div class="mesh-circle circle-4"></div>
+    <div class="mesh-circle circle-5"></div>
+    <div class="mesh-circle circle-6"></div>
+    <div class="mesh-circle circle-7"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="header-left">
+        <div class="logo">
+          <svg viewBox="0 0 512 512" class="logo-svg">
+            <!-- Large filled star (accent color grey) -->
+            <path d="M 200,130 Q 200,280 350,280 Q 200,280 200,430 Q 200,280 50,280 Q 200,280 200,130 Z" fill="var(--accent-color)" stroke="var(--accent-color)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Small hollow star (outlined in accent color) -->
+            <path d="M 380,70 Q 380,160 470,160 Q 380,160 380,250 Q 380,160 290,160 Q 380,160 380,70 Z" fill="none" stroke="var(--accent-color)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h1>Aura<span>Color</span></h1>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <!-- Control actions -->
+        <div class="harmony-selector">
+          <label for="harmony-select">配色學：</label>
+          <select id="harmony-select">
+            <option value="random">隨機色彩 (Random)</option>
+            <option value="analogous">相似色 (Analogous)</option>
+            <option value="monochromatic">單色系 (Monochromatic)</option>
+            <option value="triadic">三等分色 (Triadic)</option>
+            <option value="complementary">互補色 (Complementary)</option>
+            <option value="split">分裂互補 (Split-Comp.)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <button id="pwa-install-btn" class="btn btn-secondary hidden" title="安裝 AuraColor 至桌面">
+          <i data-lucide="download"></i>
+          <span>安裝 PWA</span>
+        </button>
+        <button id="toggle-saved-btn" class="btn btn-primary" title="開啟儲存的配色卡">
+          <i data-lucide="folder-heart"></i>
+          <span>我的收藏</span>
+        </button>
+      </div>
+    </header>
+    
+    <!-- Keyboard Shortcut Hints -->
+    <div class="shortcut-hint">
+      <span>按下 <strong>空白鍵 (Space)</strong> 隨機產生配色，點擊色彩代碼可複製</span>
+    </div>
+
+    <!-- Main Palette Display -->
+    <main class="palette-workspace">
+      <div id="palette-container" class="palette-container">
+        <!-- JS will dynamically populate 2-6 color columns here -->
+      </div>
+    </main>
+
+    <!-- Bottom Controls Panel -->
+    <section class="bottom-controls">
+      <div class="palette-modifiers">
+        <button id="remove-color-btn" class="btn btn-icon" title="減少一種顏色 (最少2個)">
+          <i data-lucide="minus"></i>
+        </button>
+        <span class="color-count-indicator"><span id="color-count-num">5</span> 色</span>
+        <button id="add-color-btn" class="btn btn-icon" title="增加一種顏色 (最多8個)">
+          <i data-lucide="plus"></i>
+        </button>
+      </div>
+      
+      <div class="palette-actions">
+        <button id="generate-btn" class="btn btn-generate" title="產生新配色 (空白鍵)">
+          <i data-lucide="refresh-cw" class="icon-spin-hover"></i>
+          <span>產生新配色</span>
+        </button>
+        
+        <div class="save-box">
+          <input type="text" id="palette-name-input" placeholder="配色卡名稱 (例如：夏日微風)" maxlength="15">
+          <button id="save-btn" class="btn btn-save" title="儲存此配色卡">
+            <i data-lucide="save"></i>
+            <span>儲存配色</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Saved Palettes Drawer (Sidebar) -->
+    <div id="saved-drawer" class="saved-drawer">
+      <div class="drawer-header">
+        <h2><i data-lucide="bookmark-heart"></i> 收藏的配色卡</h2>
+        <button id="close-drawer-btn" class="btn btn-icon" title="關閉">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      
+      <div class="drawer-filters">
+        <div class="search-box">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" id="search-saved-input" placeholder="搜尋色卡名稱...">
+        </div>
+      </div>
+      
+      <div id="saved-palettes-list" class="saved-palettes-list">
+        <!-- JS will dynamically populate saved palettes here -->
+        <div class="empty-state">
+          <i data-lucide="palette"></i>
+          <p>目前還沒有儲存的配色卡</p>
+          <span>在下方為配色卡命名，點擊「儲存配色」開始收藏！</span>
+        </div>
+      </div>
+    </div>
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Custom Color Picker Modal -->
+  <div id="picker-modal" class="picker-modal">
+    <div class="picker-card">
+      <div class="picker-header">
+        <span class="picker-title">編輯顏色</span>
+        <span class="picker-format">HEX <i data-lucide="chevron-down" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i></span>
+      </div>
+      <div class="picker-divider"></div>
+      <div class="picker-body">
+        <div class="picker-input-group">
+          <label class="picker-label">HEX</label>
+          <input type="text" id="picker-hex-input" class="picker-hex-input" placeholder="#FFFFFF" maxlength="7">
+        </div>
+        
+        <div class="picker-canvas-wrapper">
+          <div id="picker-canvas" class="picker-canvas">
+            <div class="picker-canvas-white"></div>
+            <div class="picker-canvas-black"></div>
+            <div id="picker-cursor" class="picker-cursor"></div>
+          </div>
+        </div>
+        
+        <div class="picker-sliders">
+          <!-- Hue Rainbow Slider -->
+          <div class="picker-slider-row">
+            <input type="range" id="picker-hue-slider" class="picker-hue-slider" min="0" max="360" value="0">
+          </div>
+          
+          <!-- Brightness Slider -->
+          <div class="picker-slider-row brightness-row">
+            <i data-lucide="sun" class="sun-icon"></i>
+            <div class="slider-track-wrap">
+              <input type="range" id="picker-brightness-slider" class="picker-brightness-slider" min="0" max="100" value="50">
+            </div>
+            <div id="picker-brightness-num" class="brightness-num">50</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="picker-modal-overlay" class="picker-modal-overlay"></div>
+  </div>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- App Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
