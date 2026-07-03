@@ -1,11 +1,15 @@
-const CACHE_NAME = 'auracolor-cache-v20';
+const CACHE_NAME = 'auracolor-cache-v21';
+
+// Dynamically detect base path (works on both localhost and GitHub Pages subdirectory)
+const BASE_PATH = self.location.pathname.replace(/\/sw\.js$/, '');
+
 const ASSETS = [
-  './',
-  './index.html',
-  './styles.css',
-  './app.js',
-  './manifest.json',
-  './icon.svg'
+  BASE_PATH + '/',
+  BASE_PATH + '/index.html',
+  BASE_PATH + '/styles.css',
+  BASE_PATH + '/app.js',
+  BASE_PATH + '/manifest.json',
+  BASE_PATH + '/icon.svg'
 ];
 
 // Install Event - Caching Assets
