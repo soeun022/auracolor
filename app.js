@@ -562,6 +562,10 @@ function setupEventListeners() {
   });
 
   // Custom Color Picker Modal bindings
+  const pickerCloseBtn = document.getElementById('picker-close-btn');
+  if (pickerCloseBtn) {
+    pickerCloseBtn.addEventListener('click', closePickerModal);
+  }
   elements.pickerModalOverlay.addEventListener('click', closePickerModal);
   
   elements.pickerCanvas.addEventListener('mousedown', startCanvasDrag);

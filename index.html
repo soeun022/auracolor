@@ -150,7 +150,12 @@
     <div class="picker-card">
       <div class="picker-header">
         <span class="picker-title">編輯顏色</span>
-        <span class="picker-format">HEX <i data-lucide="chevron-down" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i></span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span class="picker-format">HEX</span>
+          <button id="picker-close-btn" class="tool-btn" style="width: 32px; height: 32px; padding: 0; display: flex; justify-content: center; align-items: center; border-radius: 50%;" title="關閉">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
       </div>
       <div class="picker-divider"></div>
       <div class="picker-body">
