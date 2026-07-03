@@ -8,7 +8,7 @@
   --border-glass-focus: rgba(99, 94, 92, 0.35);
   --text-primary: #3E3A39;
   --text-secondary: #7E7774;
-  --accent-color: #635E5C;
+  --accent-color: #5A5454;
   --accent-glow: rgba(99, 94, 92, 0.25);
   --success-color: #5C6E58;
   --danger-color: #A37C78;
@@ -82,7 +82,7 @@ html {
 }
 
 .logo h1 span {
-  background: linear-gradient(135deg, #8C827E, #635E5C);
+  background: linear-gradient(135deg, #8C827E, #5A5454);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -391,7 +391,7 @@ html {
 }
 
 .lock-btn.locked {
-  background: #635E5C !important;
+  background: #5A5454 !important;
   color: #F7F5F2 !important;
   box-shadow: 0 2px 8px rgba(99, 94, 92, 0.15) !important;
 }
@@ -1098,7 +1098,7 @@ html {
 }
 
 .picker-hex-input:focus {
-  border-color: #635E5C;
+  border-color: #5A5454;
   box-shadow: 0 0 8px rgba(99, 94, 92, 0.12);
 }
 
@@ -1180,7 +1180,7 @@ html {
   height: 18px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2.5px solid #635E5C;
+  border: 2.5px solid #5A5454;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s ease;
 }
