@@ -1,4 +1,4 @@
-const CACHE_NAME = 'auracolor-cache-v32';
+const CACHE_NAME = 'auracolor-cache-v33';
 
 // Dynamically detect base path (works on both localhost and GitHub Pages subdirectory)
 const BASE_PATH = self.location.pathname.replace(/\/sw\.js$/, '');

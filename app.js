@@ -28,8 +28,8 @@ const elements = {
   toastContainer: document.getElementById('toast-container'),
 
   // Custom Color Picker DOM elements
-  pickerCard: document.getElementById('picker-card'),
-  pickerTemplate: document.getElementById('picker-template'),
+  pickerCard: document.getElementById('picker-card') || document.querySelector('.picker-card'),
+  pickerTemplate: document.getElementById('picker-template') || document.getElementById('picker-modal'),
   pickerHexInput: document.getElementById('picker-hex-input'),
   pickerCanvas: document.getElementById('picker-canvas'),
   pickerCursor: document.getElementById('picker-cursor'),
@@ -268,7 +268,7 @@ function removeSpecificColor(index) {
 // Render colors in workspace
 function renderPalette() {
   // Rescue picker-card before clearing container
-  if (elements.pickerCard && elements.pickerCard.parentElement !== elements.pickerTemplate) {
+  if (elements.pickerCard && elements.pickerTemplate && elements.pickerCard.parentElement !== elements.pickerTemplate) {
     elements.pickerTemplate.appendChild(elements.pickerCard);
   }
   
