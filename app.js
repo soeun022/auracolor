@@ -668,6 +668,12 @@ function hslToHsv(h, s, l) {
 
 // Open modal and load current color properties
 function openPickerModal(index) {
+  // If clicking the currently active adjust button, close it
+  if (state.activePickerIndex === index) {
+    closePickerModal();
+    return;
+  }
+  
   state.activePickerIndex = index;
   const colorObj = state.colors[index];
   const hsv = hslToHsv(colorObj.hsl.h, colorObj.hsl.s, colorObj.hsl.l);
