@@ -1344,17 +1344,11 @@ body.exporting-poster .color-block-wrapper {
   min-height: 60px !important;
 }
 
-/* Bigger, heavily overlapping blobs for intense mixing effect */
+/* Slightly bigger circles for more mixing feel */
+/* Keep opacity, filter, background EXACTLY same as app - no overrides */
 body.exporting-poster .mesh-circle {
-  width: 120vw !important;
-  height: 120vw !important;
-  opacity: 0.95 !important;
-}
-
-body.exporting-poster .mesh-background {
-  opacity: 1 !important;
-  filter: blur(60px) saturate(3) !important;
-  -webkit-filter: blur(60px) saturate(3) !important;
+  width: 75vw !important;
+  height: 75vw !important;
 }
 
 /* Camera Shutter Overlay */

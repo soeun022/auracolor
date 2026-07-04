@@ -586,84 +586,102 @@ function setupEventListeners() {
         showToast('圖片匯出模組載入中，請稍後再試', 'error');
         return;
       }
-      
-      if (state.activePickerIndex !== null) {
-        closePickerModal();
-      }
+      if (state.activePickerIndex !== null) closePickerModal();
 
-      // Step 1: Show shutter FIRST so user never sees layout changes
+      // Step 1: Show shutter first (user never sees layout changes behind it)
       elements.cameraShutter.classList.add('active');
-      
-      // Step 2: After shutter is fully visible, THEN add poster class (safe behind shutter)
+
       setTimeout(async () => {
+        // Step 2: Add poster class behind shutter (hides buttons, expands cards, bigger circles)
         document.body.classList.add('exporting-poster');
-        
-        // Build the palette name label
-        const paletteName = (elements.paletteNameInput.value || '').trim() || 'Aura Color';
-        
-        // Pick random bg color from palette
-        const bgIdx = Math.floor(Math.random() * state.colors.length);
-        const bgHex = state.colors[bgIdx].hex;
-        
-        // Pick a different color for the text
-        let textHex;
-        if (state.colors.length > 1) {
-          let textIdx;
-          do { textIdx = Math.floor(Math.random() * state.colors.length); }
-          while (textIdx === bgIdx);
-          textHex = state.colors[textIdx].hex;
-        } else {
-          // Fallback: use white or black based on luminance
-          const r = parseInt(bgHex.slice(1,3), 16);
-          const g = parseInt(bgHex.slice(3,5), 16);
-          const b = parseInt(bgHex.slice(5,7), 16);
-          const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-          textHex = luminance > 0.5 ? '#3d3835' : '#f5f3f0';
-        }
-        
-        // Create the label element
-        const exportLabel = document.createElement('div');
-        exportLabel.id = 'export-label';
-        exportLabel.style.cssText = `
-          position: fixed;
-          bottom: 52px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: ${bgHex};
-          color: ${textHex};
-          padding: 14px 40px;
-          border-radius: 100px;
-          font-family: 'Outfit', 'Noto Sans TC', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 600;
-          letter-spacing: 2px;
-          white-space: nowrap;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-          z-index: 200;
-          pointer-events: none;
-        `;
-        exportLabel.textContent = paletteName;
-        document.body.appendChild(exportLabel);
-        
-        // Step 3: One animation frame to let DOM repaint
+
         requestAnimationFrame(async () => {
           try {
-            const dataUrl = await htmlToImage.toPng(document.body, {
-              pixelRatio: 2,
-            });
-            
+            // Step 3: Capture page at 2x resolution
+            const capturedDataUrl = await htmlToImage.toPng(document.body, { pixelRatio: 2 });
+
+            // Step 4: Restore layout immediately (user still sees shutter)
+            document.body.classList.remove('exporting-poster');
+
+            // Step 5: Load the captured image
+            const img = new Image();
+            img.src = capturedDataUrl;
+            await new Promise(resolve => { img.onload = resolve; });
+
+            // Step 6: Compose into a 1080x1920 (9:16) canvas
+            const OUT_W = 1080, OUT_H = 1920;
+            const outCanvas = document.createElement('canvas');
+            outCanvas.width = OUT_W;
+            outCanvas.height = OUT_H;
+            const ctx = outCanvas.getContext('2d');
+
+            // Fill background first
+            ctx.fillStyle = '#F7F5F2';
+            ctx.fillRect(0, 0, OUT_W, OUT_H);
+
+            // Scale image to COVER the 9:16 canvas (crop sides if needed)
+            const scale = Math.max(OUT_W / img.width, OUT_H / img.height);
+            const drawW = img.width * scale;
+            const drawH = img.height * scale;
+            const drawX = (OUT_W - drawW) / 2;
+            const drawY = (OUT_H - drawH) / 2;
+            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+            // Step 7: Draw palette name label pill directly on canvas
+            const paletteName = (elements.paletteNameInput.value || '').trim() || 'Aura Color';
+            const bgIdx = Math.floor(Math.random() * state.colors.length);
+            const bgHex = state.colors[bgIdx].hex;
+            let textHex;
+            if (state.colors.length > 1) {
+              let ti;
+              do { ti = Math.floor(Math.random() * state.colors.length); } while (ti === bgIdx);
+              textHex = state.colors[ti].hex;
+            } else {
+              const r = parseInt(bgHex.slice(1,3),16), g = parseInt(bgHex.slice(3,5),16), b = parseInt(bgHex.slice(5,7),16);
+              textHex = (0.299*r + 0.587*g + 0.114*b)/255 > 0.5 ? '#3d3835' : '#f5f3f0';
+            }
+
+            const fontSize = 40;
+            ctx.font = `600 ${fontSize}px Outfit, "Noto Sans TC", sans-serif`;
+            const textW = ctx.measureText(paletteName).width;
+            const padX = 64, pillH = 80, pillR = 40;
+            const pillW = textW + padX * 2;
+            const pillX = (OUT_W - pillW) / 2;
+            const pillY = OUT_H - 140 - pillH;
+
+            // Pill shadow
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 36;
+            ctx.shadowOffsetY = 10;
+
+            // Pill background (rounded rect)
+            ctx.beginPath();
+            ctx.roundRect(pillX, pillY, pillW, pillH, pillR);
+            ctx.fillStyle = bgHex;
+            ctx.fill();
+            ctx.restore();
+
+            // Pill text
+            ctx.fillStyle = textHex;
+            ctx.font = `600 ${fontSize}px Outfit, "Noto Sans TC", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(paletteName, OUT_W / 2, pillY + pillH / 2);
+
+            // Step 8: Download final 9:16 poster
+            const finalUrl = outCanvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.download = `auracolor-poster-${Date.now()}.png`;
-            link.href = dataUrl;
+            link.href = finalUrl;
             link.click();
-            
+
             showToast('海報已成功儲存！', 'success');
           } catch (err) {
             console.error('Export failed:', err);
+            document.body.classList.remove('exporting-poster');
             showToast('圖片匯出失敗', 'error');
           } finally {
-            exportLabel.remove();
-            document.body.classList.remove('exporting-poster');
             elements.cameraShutter.classList.remove('active');
           }
         });
