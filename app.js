@@ -643,6 +643,16 @@ function openPickerModal(index) {
   const colorObj = state.colors[index];
   const hsv = hslToHsv(colorObj.hsl.h, colorObj.hsl.s, colorObj.hsl.l);
   
+  // Dynamically position the picker card so it doesn't overlap the edited color
+  const col = elements.paletteContainer.children[index];
+  const rect = col.getBoundingClientRect();
+  const pickerCard = document.querySelector('.picker-card');
+  if (rect.top > window.innerHeight / 2) {
+    pickerCard.classList.add('picker-top');
+  } else {
+    pickerCard.classList.remove('picker-top');
+  }
+  
   elements.pickerHexInput.value = colorObj.hex.toUpperCase();
   elements.pickerHueSlider.value = colorObj.hsl.h;
   elements.pickerBrightnessSlider.value = colorObj.hsl.l;

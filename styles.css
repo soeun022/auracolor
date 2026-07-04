@@ -1031,6 +1031,19 @@ html {
   right: 24px;
   z-index: 1001;
   color: #3e3a39;
+  transition: top 0.3s ease, bottom 0.3s ease;
+}
+
+.picker-card.picker-top {
+  bottom: auto;
+  top: 24px;
+}
+
+@media (max-width: 768px) {
+  .picker-card {
+    right: 50%;
+    transform: translateX(50%);
+  }
 }
 
 .picker-header {
