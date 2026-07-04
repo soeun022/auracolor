@@ -598,7 +598,54 @@ function setupEventListeners() {
       setTimeout(async () => {
         document.body.classList.add('exporting-poster');
         
-        // Step 3: One animation frame to let DOM repaint with hidden buttons + big circles
+        // Build the palette name label
+        const paletteName = (elements.paletteNameInput.value || '').trim() || 'Aura Color';
+        
+        // Pick random bg color from palette
+        const bgIdx = Math.floor(Math.random() * state.colors.length);
+        const bgHex = state.colors[bgIdx].hex;
+        
+        // Pick a different color for the text
+        let textHex;
+        if (state.colors.length > 1) {
+          let textIdx;
+          do { textIdx = Math.floor(Math.random() * state.colors.length); }
+          while (textIdx === bgIdx);
+          textHex = state.colors[textIdx].hex;
+        } else {
+          // Fallback: use white or black based on luminance
+          const r = parseInt(bgHex.slice(1,3), 16);
+          const g = parseInt(bgHex.slice(3,5), 16);
+          const b = parseInt(bgHex.slice(5,7), 16);
+          const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+          textHex = luminance > 0.5 ? '#3d3835' : '#f5f3f0';
+        }
+        
+        // Create the label element
+        const exportLabel = document.createElement('div');
+        exportLabel.id = 'export-label';
+        exportLabel.style.cssText = `
+          position: fixed;
+          bottom: 52px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: ${bgHex};
+          color: ${textHex};
+          padding: 14px 40px;
+          border-radius: 100px;
+          font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+          font-size: 1.05rem;
+          font-weight: 600;
+          letter-spacing: 2px;
+          white-space: nowrap;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+          z-index: 200;
+          pointer-events: none;
+        `;
+        exportLabel.textContent = paletteName;
+        document.body.appendChild(exportLabel);
+        
+        // Step 3: One animation frame to let DOM repaint
         requestAnimationFrame(async () => {
           try {
             const dataUrl = await htmlToImage.toPng(document.body, {
@@ -615,6 +662,7 @@ function setupEventListeners() {
             console.error('Export failed:', err);
             showToast('圖片匯出失敗', 'error');
           } finally {
+            exportLabel.remove();
             document.body.classList.remove('exporting-poster');
             elements.cameraShutter.classList.remove('active');
           }
