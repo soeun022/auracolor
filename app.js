@@ -292,7 +292,7 @@ function renderPalette() {
         </div>
       </div>
       
-      <button class="delete-btn-outer" title="刪除色彩">
+      <button class="lock-btn delete-btn-outer" title="刪除色彩" style="color: var(--accent-color);">
         <i data-lucide="trash-2"></i>
       </button>
     `;
