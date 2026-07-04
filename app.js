@@ -585,7 +585,7 @@ function setupEventListeners() {
 
   // Add/Remove colors modifiers
   elements.addColorBtn.addEventListener('click', () => {
-    if (state.colorCount < 8) {
+    if (state.colorCount < 10) {
       state.colorCount++;
       elements.colorCountNum.textContent = state.colorCount;
       
@@ -598,7 +598,7 @@ function setupEventListeners() {
       });
       renderPalette();
     } else {
-      showToast('最多支援 8 種色彩', 'error');
+      showToast('最多只能加入 10 種色彩', 'error');
     }
   });
 
