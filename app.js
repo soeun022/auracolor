@@ -590,29 +590,33 @@ function setupEventListeners() {
         closePickerModal();
       }
 
-      showToast('正在產生高畫質色卡...', 'success');
-      elements.paletteContainer.classList.add('exporting');
+      showToast('正在產生 9:16 高畫質海報...', 'success');
       
-      // Short delay to ensure browser paints the hidden buttons
+      // Short delay to ensure browser paints before cloning
       setTimeout(async () => {
         try {
-          const canvas = await html2canvas(elements.paletteContainer, {
+          const canvas = await html2canvas(document.body, {
             scale: 2,
-            backgroundColor: null,
-            logging: false
+            width: 1080,
+            height: 1920,
+            windowWidth: 1080,
+            windowHeight: 1920,
+            backgroundColor: '#F7F5F2',
+            logging: false,
+            onclone: (clonedDoc) => {
+              clonedDoc.body.classList.add('exporting-poster');
+            }
           });
           
           const link = document.createElement('a');
-          link.download = `auracolor-palette-${Date.now()}.png`;
+          link.download = `auracolor-poster-${Date.now()}.png`;
           link.href = canvas.toDataURL('image/png');
           link.click();
           
-          showToast('色卡已成功儲存！', 'success');
+          showToast('海報已成功儲存！', 'success');
         } catch (err) {
           console.error('Export failed:', err);
           showToast('圖片匯出失敗', 'error');
-        } finally {
-          elements.paletteContainer.classList.remove('exporting');
         }
       }, 50);
     });

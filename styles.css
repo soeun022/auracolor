@@ -1312,14 +1312,74 @@ html {
 .circle-6 { top: 20%; left: 25%; width: 35vw; height: 35vw; opacity: 0.65; }
 .circle-7 { bottom: 20%; right: 25%; width: 40vw; height: 40vw; opacity: 0.7; }
 
-/* Exporting Mode */
-.palette-container.exporting .lock-btn,
-.palette-container.exporting .delete-btn-outer,
-.palette-container.exporting .tool-btn,
-.palette-container.exporting .drag-handle {
+/* Exporting 9:16 Poster Mode */
+body.exporting-poster {
+  width: 1080px !important;
+  height: 1920px !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+body.exporting-poster .app-container {
+  width: 1080px !important;
+  height: 1920px !important;
+  overflow: hidden !important;
+}
+
+body.exporting-poster .mesh-background {
+  width: 1080px !important;
+  height: 1920px !important;
+}
+
+/* Hide UI elements */
+body.exporting-poster .main-header,
+body.exporting-poster .bottom-controls,
+body.exporting-poster .shortcut-hint,
+body.exporting-poster .picker-card,
+body.exporting-poster .drawer-overlay,
+body.exporting-poster .saved-drawer,
+body.exporting-poster .lock-btn,
+body.exporting-poster .delete-btn-outer,
+body.exporting-poster .tool-btn,
+body.exporting-poster .drag-handle {
   display: none !important;
 }
 
-.palette-container.exporting .picker-card {
-  display: none !important;
+/* Force mobile-like vertical layout for 1080x1920 poster */
+body.exporting-poster .palette-workspace {
+  width: 1080px !important;
+  height: 1920px !important;
+  padding: 180px 100px !important;
+  justify-content: center !important;
+}
+
+body.exporting-poster .palette-container {
+  flex-direction: column !important;
+  gap: 40px !important;
+  height: 100% !important;
+}
+
+body.exporting-poster .color-col {
+  flex-direction: row !important;
+  width: 100% !important;
+  height: auto !important;
+  flex: 1 !important;
+}
+
+body.exporting-poster .color-card {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 60px !important;
+  border: none !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12) !important;
+  padding: 0 80px !important;
+  justify-content: center !important;
+}
+
+body.exporting-poster .hex-value {
+  font-size: 3rem !important;
+  letter-spacing: 4px !important;
+  font-weight: 700 !important;
 }
