@@ -1343,7 +1343,9 @@ body.exporting-poster .saved-drawer,
 body.exporting-poster .lock-btn,
 body.exporting-poster .delete-btn-outer,
 body.exporting-poster .tool-btn,
-body.exporting-poster .drag-handle {
+body.exporting-poster .drag-handle,
+body.exporting-poster .toast-container,
+body.exporting-poster .camera-shutter {
   display: none !important;
 }
 
@@ -1382,4 +1384,48 @@ body.exporting-poster .hex-value {
   font-size: 3rem !important;
   letter-spacing: 4px !important;
   font-weight: 700 !important;
+}
+
+/* Camera Shutter Overlay */
+.camera-shutter {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  animation: shutterFadeIn 0.25s ease;
+}
+
+.camera-shutter.active {
+  display: flex;
+}
+
+.shutter-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(99, 94, 92, 0.15);
+  border-top-color: var(--text-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.shutter-text {
+  font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+@keyframes shutterFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

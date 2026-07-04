@@ -25,6 +25,12 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Camera Shutter Overlay -->
+  <div id="camera-shutter" class="camera-shutter">
+    <div class="shutter-spinner"></div>
+    <div class="shutter-text">正在處理高畫質影像...</div>
+  </div>
+
   <!-- Dynamic Color Mesh Background -->
   <div id="mesh-background" class="mesh-background">
     <div class="mesh-circle circle-0"></div>
@@ -199,8 +205,8 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- App Logic -->
-  <!-- html2canvas CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- html-to-image CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
 </body>

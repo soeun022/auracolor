@@ -27,6 +27,7 @@ const elements = {
   saveBtn: document.getElementById('save-btn'),
   paletteNameInput: document.getElementById('palette-name-input'),
   toastContainer: document.getElementById('toast-container'),
+  cameraShutter: document.getElementById('camera-shutter'),
 
   // Custom Color Picker DOM elements
   pickerCard: document.getElementById('picker-card') || document.querySelector('.picker-card'),
@@ -581,7 +582,7 @@ function setupEventListeners() {
   // Export Image Button
   if (elements.exportImageBtn) {
     elements.exportImageBtn.addEventListener('click', async () => {
-      if (typeof html2canvas === 'undefined') {
+      if (typeof htmlToImage === 'undefined') {
         showToast('圖片匯出模組載入中，請稍後再試', 'error');
         return;
       }
@@ -590,35 +591,40 @@ function setupEventListeners() {
         closePickerModal();
       }
 
-      showToast('正在產生 9:16 高畫質海報...', 'success');
+      // Show shutter overlay and add poster class
+      elements.cameraShutter.classList.add('active');
+      document.body.classList.add('exporting-poster');
       
-      // Short delay to ensure browser paints before cloning
+      // Delay to allow UI to update and shutter to appear
       setTimeout(async () => {
         try {
-          const canvas = await html2canvas(document.body, {
-            scale: 2,
-            width: 1080,
-            height: 1920,
-            windowWidth: 1080,
-            windowHeight: 1920,
-            backgroundColor: '#F7F5F2',
-            logging: false,
-            onclone: (clonedDoc) => {
-              clonedDoc.body.classList.add('exporting-poster');
-            }
+          const dataUrl = await htmlToImage.toPng(document.body, {
+            canvasWidth: 1080,
+            canvasHeight: 1920,
+            style: {
+              width: '1080px',
+              height: '1920px',
+              transform: 'scale(1)',
+              transformOrigin: 'top left'
+            },
+            pixelRatio: 1 // since canvasWidth is already high resolution enough
           });
           
           const link = document.createElement('a');
           link.download = `auracolor-poster-${Date.now()}.png`;
-          link.href = canvas.toDataURL('image/png');
+          link.href = dataUrl;
           link.click();
           
           showToast('海報已成功儲存！', 'success');
         } catch (err) {
           console.error('Export failed:', err);
           showToast('圖片匯出失敗', 'error');
+        } finally {
+          // Remove poster class and shutter
+          document.body.classList.remove('exporting-poster');
+          elements.cameraShutter.classList.remove('active');
         }
-      }, 50);
+      }, 500); // Wait 500ms for layout shifts to complete behind the shutter
     });
   }
   
