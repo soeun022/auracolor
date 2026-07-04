@@ -591,40 +591,35 @@ function setupEventListeners() {
         closePickerModal();
       }
 
-      // Show shutter overlay and add poster class
+      // Step 1: Show shutter FIRST so user never sees layout changes
       elements.cameraShutter.classList.add('active');
-      document.body.classList.add('exporting-poster');
       
-      // Delay to allow UI to update and shutter to appear
+      // Step 2: After shutter is fully visible, THEN add poster class (safe behind shutter)
       setTimeout(async () => {
-        try {
-          const dataUrl = await htmlToImage.toPng(document.body, {
-            canvasWidth: 1080,
-            canvasHeight: 1920,
-            style: {
-              width: '1080px',
-              height: '1920px',
-              transform: 'scale(1)',
-              transformOrigin: 'top left'
-            },
-            pixelRatio: 1 // since canvasWidth is already high resolution enough
-          });
-          
-          const link = document.createElement('a');
-          link.download = `auracolor-poster-${Date.now()}.png`;
-          link.href = dataUrl;
-          link.click();
-          
-          showToast('海報已成功儲存！', 'success');
-        } catch (err) {
-          console.error('Export failed:', err);
-          showToast('圖片匯出失敗', 'error');
-        } finally {
-          // Remove poster class and shutter
-          document.body.classList.remove('exporting-poster');
-          elements.cameraShutter.classList.remove('active');
-        }
-      }, 500); // Wait 500ms for layout shifts to complete behind the shutter
+        document.body.classList.add('exporting-poster');
+        
+        // Step 3: One animation frame to let DOM repaint with hidden buttons + big circles
+        requestAnimationFrame(async () => {
+          try {
+            const dataUrl = await htmlToImage.toPng(document.body, {
+              pixelRatio: 2,
+            });
+            
+            const link = document.createElement('a');
+            link.download = `auracolor-poster-${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+            
+            showToast('海報已成功儲存！', 'success');
+          } catch (err) {
+            console.error('Export failed:', err);
+            showToast('圖片匯出失敗', 'error');
+          } finally {
+            document.body.classList.remove('exporting-poster');
+            elements.cameraShutter.classList.remove('active');
+          }
+        });
+      }, 400);
     });
   }
   

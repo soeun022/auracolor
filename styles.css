@@ -1312,27 +1312,10 @@ html {
 .circle-6 { top: 20%; left: 25%; width: 35vw; height: 35vw; opacity: 0.65; }
 .circle-7 { bottom: 20%; right: 25%; width: 40vw; height: 40vw; opacity: 0.7; }
 
-/* Exporting 9:16 Poster Mode */
-body.exporting-poster {
-  width: 1080px !important;
-  height: 1920px !important;
-  overflow: hidden !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
+/* Exporting Poster Mode */
+/* DO NOT set width/height on body - it causes layout flash */
 
-body.exporting-poster .app-container {
-  width: 1080px !important;
-  height: 1920px !important;
-  overflow: hidden !important;
-}
-
-body.exporting-poster .mesh-background {
-  width: 1080px !important;
-  height: 1920px !important;
-}
-
-/* Hide ALL functional buttons - keep layout exactly as app */
+/* Hide ALL functional buttons */
 body.exporting-poster .main-header,
 body.exporting-poster .bottom-controls,
 body.exporting-poster .shortcut-hint,
@@ -1346,6 +1329,32 @@ body.exporting-poster .drag-handle,
 body.exporting-poster .toast-container,
 body.exporting-poster .camera-shutter {
   display: none !important;
+}
+
+/* Palette expands to fill all available space */
+body.exporting-poster .palette-workspace {
+  padding-top: 80px !important;
+  padding-bottom: 80px !important;
+}
+
+/* Color block wrappers grow to fill space instead of fixed 80px height */
+body.exporting-poster .color-block-wrapper {
+  height: auto !important;
+  flex: 1 !important;
+  min-height: 60px !important;
+}
+
+/* Bigger, heavily overlapping blobs for intense mixing effect */
+body.exporting-poster .mesh-circle {
+  width: 120vw !important;
+  height: 120vw !important;
+  opacity: 0.95 !important;
+}
+
+body.exporting-poster .mesh-background {
+  opacity: 1 !important;
+  filter: blur(60px) saturate(3) !important;
+  -webkit-filter: blur(60px) saturate(3) !important;
 }
 
 /* Camera Shutter Overlay */
