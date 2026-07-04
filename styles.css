@@ -1007,6 +1007,10 @@ html {
   opacity: 1;
 }
 
+.picker-modal.active .picker-card {
+  pointer-events: auto;
+}
+
 .picker-modal-overlay {
   display: none;
 }
@@ -1026,8 +1030,6 @@ html {
   bottom: 24px;
   right: 24px;
   z-index: 1001;
-  pointer-events: auto;
-  color: #3e3a39;
   color: #3e3a39;
 }
 
