@@ -253,6 +253,18 @@ function generatePalette(forceAll = false) {
   renderPalette();
 }
 
+// Remove specific color from palette
+function removeSpecificColor(index) {
+  if (state.colorCount > 2) {
+    state.colors.splice(index, 1);
+    state.colorCount--;
+    elements.colorCountNum.textContent = state.colorCount;
+    renderPalette();
+  } else {
+    showToast('最少需要 2 種色彩', 'error');
+  }
+}
+
 // Render colors in workspace
 function renderPalette() {
   elements.paletteContainer.innerHTML = '';
@@ -277,6 +289,9 @@ function renderPalette() {
           <button class="tool-btn adjust-btn" title="細部調整">
             <i data-lucide="sliders"></i>
           </button>
+          <button class="tool-btn delete-btn" title="刪除色彩" style="color: var(--danger-color);">
+            <i data-lucide="trash-2"></i>
+          </button>
         </div>
       </div>
     `;
@@ -290,6 +305,15 @@ function renderPalette() {
 
     const adjustBtn = col.querySelector('.adjust-btn');
     adjustBtn.addEventListener('click', () => openPickerModal(i));
+
+    const deleteBtn = col.querySelector('.delete-btn');
+    if (state.colorCount <= 2) {
+      deleteBtn.style.opacity = '0.3';
+      deleteBtn.style.cursor = 'not-allowed';
+      deleteBtn.addEventListener('click', () => showToast('最少需要 2 種色彩', 'error'));
+    } else {
+      deleteBtn.addEventListener('click', () => removeSpecificColor(i));
+    }
 
     elements.paletteContainer.appendChild(col);
   });
