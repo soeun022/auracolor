@@ -511,13 +511,33 @@ function closeDrawer() {
 
 // Event Listeners setup
 function setupEventListeners() {
-  // Generate on spacebar press (if not typing in input fields)
+  // Keydown shortcuts
   window.addEventListener('keydown', (e) => {
+    // Generate on spacebar press (if not typing in input fields)
     if (e.code === 'Space') {
       const activeEl = document.activeElement.tagName;
       if (activeEl !== 'INPUT' && activeEl !== 'SELECT' && activeEl !== 'TEXTAREA') {
         e.preventDefault();
         generatePalette();
+      }
+    }
+    
+    // Close picker on Escape
+    if (e.key === 'Escape') {
+      if (state.activePickerIndex !== null) {
+        closePickerModal();
+      }
+    }
+  });
+  
+  // Close picker when clicking outside
+  document.addEventListener('click', (e) => {
+    if (state.activePickerIndex !== null) {
+      const isClickInsidePicker = elements.pickerCard && elements.pickerCard.contains(e.target);
+      const isClickOnAdjustBtn = e.target.closest('.adjust-btn');
+      
+      if (!isClickInsidePicker && !isClickOnAdjustBtn) {
+        closePickerModal();
       }
     }
   });
