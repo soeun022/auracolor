@@ -289,11 +289,12 @@ function renderPalette() {
           <button class="tool-btn adjust-btn" title="細部調整">
             <i data-lucide="sliders"></i>
           </button>
-          <button class="tool-btn delete-btn" title="刪除色彩" style="color: var(--danger-color);">
-            <i data-lucide="trash-2"></i>
-          </button>
         </div>
       </div>
+      
+      <button class="delete-btn-outer" title="刪除色彩">
+        <i data-lucide="trash-2"></i>
+      </button>
     `;
 
     // Event Listeners for this column
@@ -306,7 +307,7 @@ function renderPalette() {
     const adjustBtn = col.querySelector('.adjust-btn');
     adjustBtn.addEventListener('click', () => openPickerModal(i));
 
-    const deleteBtn = col.querySelector('.delete-btn');
+    const deleteBtn = col.querySelector('.delete-btn-outer');
     if (state.colorCount <= 2) {
       deleteBtn.style.opacity = '0.3';
       deleteBtn.style.cursor = 'not-allowed';

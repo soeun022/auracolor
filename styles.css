@@ -370,6 +370,33 @@ html {
   box-shadow: none !important;
 }
 
+.delete-btn-outer {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(99, 94, 92, 0.06);
+  border: none !important;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-spring);
+  flex-shrink: 0;
+  box-shadow: none !important;
+}
+
+.delete-btn-outer svg {
+  width: 14px;
+  height: 14px;
+}
+
+.delete-btn-outer:hover {
+  transform: scale(1.1);
+  background: rgba(99, 94, 92, 0.12);
+  color: var(--text-primary);
+}
+
 .lock-btn svg {
   width: 14px;
   height: 14px;
