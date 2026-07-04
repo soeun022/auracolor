@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSavedPalettes();
   setupEventListeners();
   initPalette();
+  initSortable();
   registerServiceWorker();
 });
 
@@ -53,6 +54,34 @@ function registerServiceWorker() {
       navigator.serviceWorker.register('./sw.js')
         .then(reg => console.log('[Service Worker] Registered', reg.scope))
         .catch(err => console.error('[Service Worker] Registration failed', err));
+    });
+  }
+}
+
+// Initialize Drag and Drop Reordering
+function initSortable() {
+  if (typeof Sortable !== 'undefined') {
+    new Sortable(elements.paletteContainer, {
+      handle: '.drag-handle',
+      animation: 200,
+      ghostClass: 'sortable-ghost',
+      onStart: () => {
+        if (state.activePickerIndex !== null) {
+          closePickerModal();
+        }
+      },
+      onEnd: (evt) => {
+        const oldIndex = evt.oldIndex;
+        const newIndex = evt.newIndex;
+        if (oldIndex === newIndex) return;
+
+        // Reorder state array
+        const movedColor = state.colors.splice(oldIndex, 1)[0];
+        state.colors.splice(newIndex, 0, movedColor);
+        
+        // Re-render
+        renderPalette();
+      }
     });
   }
 }
@@ -290,6 +319,9 @@ function renderPalette() {
       </button>
       
       <div class="color-card ${contrastClass}" style="background-color: ${colorObj.hex}">
+        <div class="drag-handle" title="按住拖曳以排序">
+          <i data-lucide="grip-vertical"></i>
+        </div>
         <div class="col-center">
           <span class="hex-value" title="點擊複製">${colorObj.hex.toUpperCase()}</span>
         </div>

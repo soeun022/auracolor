@@ -301,6 +301,31 @@ html {
   border: 1px solid rgba(99, 94, 92, 0.1);
 }
 
+.drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  touch-action: none; /* Prevent scrolling when dragging on mobile */
+  padding-right: 12px;
+}
+
+.drag-handle:hover {
+  opacity: 0.8;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+  background-color: #f0f0f0;
+}
+
 .color-card:hover {
   box-shadow: 0 8px 24px rgba(99, 94, 92, 0.14);
 }
