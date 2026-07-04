@@ -267,7 +267,14 @@ html {
   transition: height 0.3s ease;
 }
 
-/* Color Column Wrapper */
+/* Color Block Wrapper for Accordion */
+.color-block-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Color Column */
 .color-col {
   width: 100%;
   height: 80px;
@@ -992,62 +999,48 @@ html {
   }
 }
 
-/* Custom Color Picker Modal */
-.picker-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s;
-}
-
-.picker-modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.picker-modal.active .picker-card {
-  pointer-events: auto;
-}
-
-.picker-modal-overlay {
-  display: none;
-}
-
-.picker-card {
+/* Inline Dropdown Picker */
+.picker-card.inline-dropdown {
   background: #ffffff;
   border: 1px solid rgba(99, 94, 92, 0.1);
   border-radius: 24px;
   box-shadow: 0 12px 40px rgba(99, 94, 92, 0.15);
-  padding: 24px;
-  width: 90%;
-  max-width: 320px;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1001;
   color: #3e3a39;
-  transition: top 0.3s ease, bottom 0.3s ease;
+  
+  /* Accordion styles */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.3s ease;
 }
 
-.picker-card.picker-top {
-  bottom: auto;
-  top: 24px;
+.picker-card.inline-dropdown.active {
+  max-height: 500px;
+  opacity: 1;
+  padding: 24px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  overflow: visible;
 }
 
-@media (max-width: 768px) {
-  .picker-card {
-    right: 50%;
-    transform: translateX(50%);
-  }
+.picker-card.inline-dropdown * {
+  transition: opacity 0.2s ease;
+}
+
+.picker-card.inline-dropdown:not(.active) * {
+  opacity: 0;
+}
+
+.color-block-wrapper {
+  position: relative;
+  width: 100%;
 }
 
 .picker-header {

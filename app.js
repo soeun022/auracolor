@@ -28,8 +28,8 @@ const elements = {
   toastContainer: document.getElementById('toast-container'),
 
   // Custom Color Picker DOM elements
-  pickerModal: document.getElementById('picker-modal'),
-  pickerModalOverlay: document.getElementById('picker-modal-overlay'),
+  pickerCard: document.getElementById('picker-card'),
+  pickerTemplate: document.getElementById('picker-template'),
   pickerHexInput: document.getElementById('picker-hex-input'),
   pickerCanvas: document.getElementById('picker-canvas'),
   pickerCursor: document.getElementById('picker-cursor'),
@@ -267,13 +267,22 @@ function removeSpecificColor(index) {
 
 // Render colors in workspace
 function renderPalette() {
+  // Rescue picker-card before clearing container
+  if (elements.pickerCard && elements.pickerCard.parentElement !== elements.pickerTemplate) {
+    elements.pickerTemplate.appendChild(elements.pickerCard);
+  }
+  
   elements.paletteContainer.innerHTML = '';
   
   state.colors.forEach((colorObj, i) => {
     const contrastClass = getTextContrastClass(colorObj.hex);
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'color-block-wrapper';
+    wrapper.dataset.index = i;
+    
     const col = document.createElement('div');
     col.className = 'color-col';
-    col.dataset.index = i;
 
     col.innerHTML = `
       <button class="lock-btn ${colorObj.locked ? 'locked' : ''}" title="${colorObj.locked ? '解鎖色彩' : '鎖定色彩'}">
@@ -316,7 +325,8 @@ function renderPalette() {
       deleteBtn.addEventListener('click', () => removeSpecificColor(i));
     }
 
-    elements.paletteContainer.appendChild(col);
+    wrapper.appendChild(col);
+    elements.paletteContainer.appendChild(wrapper);
   });
 
   updateMeshBackground();
@@ -591,7 +601,6 @@ function setupEventListeners() {
   if (pickerCloseBtn) {
     pickerCloseBtn.addEventListener('click', closePickerModal);
   }
-  elements.pickerModalOverlay.addEventListener('click', closePickerModal);
   
   elements.pickerCanvas.addEventListener('mousedown', startCanvasDrag);
   window.addEventListener('mousemove', canvasDrag);
@@ -643,15 +652,18 @@ function openPickerModal(index) {
   const colorObj = state.colors[index];
   const hsv = hslToHsv(colorObj.hsl.h, colorObj.hsl.s, colorObj.hsl.l);
   
-  // Dynamically position the picker card so it doesn't overlap the edited color
-  const col = elements.paletteContainer.children[index];
-  const rect = col.getBoundingClientRect();
-  const pickerCard = document.querySelector('.picker-card');
-  if (rect.top > window.innerHeight / 2) {
-    pickerCard.classList.add('picker-top');
-  } else {
-    pickerCard.classList.remove('picker-top');
+  // Move picker card inside the wrapper and trigger dropdown
+  const wrapper = elements.paletteContainer.children[index];
+  if (elements.pickerCard.parentElement !== wrapper) {
+    wrapper.appendChild(elements.pickerCard);
   }
+  
+  // Close existing dropdown before reopening to re-trigger animations
+  elements.pickerCard.classList.remove('active');
+  
+  // Force a reflow
+  void elements.pickerCard.offsetWidth;
+  
   
   elements.pickerHexInput.value = colorObj.hex.toUpperCase();
   elements.pickerHueSlider.value = colorObj.hsl.h;
@@ -668,12 +680,12 @@ function openPickerModal(index) {
   // Update brightness track gradient
   updateBrightnessTrackBackground(colorObj.hsl.h, colorObj.hsl.s);
   
-  elements.pickerModal.classList.add('active');
+  elements.pickerCard.classList.add('active');
 }
 
 function closePickerModal() {
   state.activePickerIndex = null;
-  elements.pickerModal.classList.remove('active');
+  elements.pickerCard.classList.remove('active');
 }
 
 // Drag events on Saturation/Value Square
