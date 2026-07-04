@@ -1,4 +1,4 @@
-const CACHE_NAME = 'auracolor-cache-v33';
+const CACHE_NAME = 'auracolor-cache-v34';
 
 // Dynamically detect base path (works on both localhost and GitHub Pages subdirectory)
 const BASE_PATH = self.location.pathname.replace(/\/sw\.js$/, '');
@@ -37,6 +37,15 @@ self.addEventListener('activate', (e) => {
         })
       );
     }).then(() => self.clients.claim())
+      .then(() => {
+        // Force all open clients to reload to ensure they get the new HTML/CSS
+        return self.clients.matchAll({ type: 'window' }).then(windowClients => {
+          for (let windowClient of windowClients) {
+            // Using navigate to the same URL forces a fresh load
+            windowClient.navigate(windowClient.url);
+          }
+        });
+      })
   );
 });
 
