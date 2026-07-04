@@ -23,6 +23,7 @@ const elements = {
   addColorBtn: document.getElementById('add-color-btn'),
   removeColorBtn: document.getElementById('remove-color-btn'),
   generateBtn: document.getElementById('generate-btn'),
+  exportImageBtn: document.getElementById('export-image-btn'),
   saveBtn: document.getElementById('save-btn'),
   paletteNameInput: document.getElementById('palette-name-input'),
   toastContainer: document.getElementById('toast-container'),
@@ -576,6 +577,46 @@ function setupEventListeners() {
 
   // Generator Buttons
   elements.generateBtn.addEventListener('click', () => generatePalette());
+  
+  // Export Image Button
+  if (elements.exportImageBtn) {
+    elements.exportImageBtn.addEventListener('click', async () => {
+      if (typeof html2canvas === 'undefined') {
+        showToast('圖片匯出模組載入中，請稍後再試', 'error');
+        return;
+      }
+      
+      if (state.activePickerIndex !== null) {
+        closePickerModal();
+      }
+
+      showToast('正在產生高畫質色卡...', 'success');
+      elements.paletteContainer.classList.add('exporting');
+      
+      // Short delay to ensure browser paints the hidden buttons
+      setTimeout(async () => {
+        try {
+          const canvas = await html2canvas(elements.paletteContainer, {
+            scale: 2,
+            backgroundColor: null,
+            logging: false
+          });
+          
+          const link = document.createElement('a');
+          link.download = `auracolor-palette-${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          
+          showToast('色卡已成功儲存！', 'success');
+        } catch (err) {
+          console.error('Export failed:', err);
+          showToast('圖片匯出失敗', 'error');
+        } finally {
+          elements.paletteContainer.classList.remove('exporting');
+        }
+      }, 50);
+    });
+  }
   
   // Harmony Selector
   elements.harmonySelect.addEventListener('change', (e) => {

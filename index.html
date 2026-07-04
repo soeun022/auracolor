@@ -103,6 +103,11 @@
           <i data-lucide="refresh-cw" class="icon-spin-hover"></i>
           <span>產生新配色</span>
         </button>
+
+        <button id="export-image-btn" class="btn btn-export" title="下載為圖片">
+          <i data-lucide="image-down"></i>
+          <span>儲存圖片</span>
+        </button>
         
         <div class="save-box">
           <input type="text" id="palette-name-input" placeholder="配色卡名稱 (例如：夏日微風)" maxlength="15">
@@ -194,6 +199,8 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- App Logic -->
+  <!-- html2canvas CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
 </body>

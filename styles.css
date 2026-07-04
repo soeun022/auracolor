@@ -579,6 +579,17 @@ html {
   margin-left: 24px;
 }
 
+.btn-export {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid rgba(99, 94, 92, 0.2);
+}
+
+.btn-export:hover {
+  background: var(--text-primary);
+  color: #ffffff;
+}
+
 .save-box {
   display: flex;
   align-items: center;
@@ -1300,3 +1311,15 @@ html {
 .circle-5 { bottom: -15%; right: -5%; width: 45vw; height: 45vw; opacity: 0.7; }
 .circle-6 { top: 20%; left: 25%; width: 35vw; height: 35vw; opacity: 0.65; }
 .circle-7 { bottom: 20%; right: 25%; width: 40vw; height: 40vw; opacity: 0.7; }
+
+/* Exporting Mode */
+.palette-container.exporting .lock-btn,
+.palette-container.exporting .delete-btn-outer,
+.palette-container.exporting .tool-btn,
+.palette-container.exporting .drag-handle {
+  display: none !important;
+}
+
+.palette-container.exporting .picker-card {
+  display: none !important;
+}
