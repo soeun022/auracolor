@@ -629,17 +629,15 @@ function setupEventListeners() {
 
             // Step 7: Draw palette name label pill directly on canvas
             const paletteName = (elements.paletteNameInput.value || '').trim() || 'Aura Color';
-            const bgIdx = Math.floor(Math.random() * state.colors.length);
-            const bgHex = state.colors[bgIdx].hex;
-            let textHex;
-            if (state.colors.length > 1) {
-              let ti;
-              do { ti = Math.floor(Math.random() * state.colors.length); } while (ti === bgIdx);
-              textHex = state.colors[ti].hex;
-            } else {
-              const r = parseInt(bgHex.slice(1,3),16), g = parseInt(bgHex.slice(3,5),16), b = parseInt(bgHex.slice(5,7),16);
-              textHex = (0.299*r + 0.587*g + 0.114*b)/255 > 0.5 ? '#3d3835' : '#f5f3f0';
-            }
+            
+            // Calculate luminance for each color
+            const getLum = (hex) => {
+              const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+              return 0.299*r + 0.587*g + 0.114*b;
+            };
+            const sorted = [...state.colors].sort((a, b) => getLum(a.hex) - getLum(b.hex));
+            const bgHex = sorted[sorted.length - 1].hex;  // lightest color = background
+            const textHex = sorted[0].hex;                 // darkest color = text
 
             const fontSize = 40;
             ctx.font = `600 ${fontSize}px Outfit, "Noto Sans TC", sans-serif`;

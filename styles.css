@@ -1344,12 +1344,13 @@ body.exporting-poster .color-block-wrapper {
   min-height: 60px !important;
 }
 
-/* Slightly bigger circles for more mixing feel */
-/* Keep opacity, filter, background EXACTLY same as app - no overrides */
-body.exporting-poster .mesh-circle {
-  width: 75vw !important;
-  height: 75vw !important;
+/* Remove box-shadow from color cards in poster (avoids artifact shadows) */
+body.exporting-poster .color-card {
+  box-shadow: none !important;
+  border: none !important;
 }
+
+/* DO NOT override mesh-circle size - keep exact same as app */
 
 /* Camera Shutter Overlay */
 .camera-shutter {
