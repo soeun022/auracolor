@@ -22,19 +22,3 @@
 | `manifest.json` | PWA 應用程式設定 |
 | `sw.js` | Service Worker 離線快取策略 |
 | `icon.svg` | 應用程式圖示（雙星設計） |
-
-## 線上展示
-
-> 🔗 [點此開啟 AuraColor](https://你的帳號.github.io/auracolor/)
-
-## 本地執行
-
-```bash
-# 需要本地 HTTP 伺服器（直接開啟 index.html 無法啟用 Service Worker）
-python3 -m http.server 8000
-# 然後開啟 http://localhost:8000
-```
-
-## 授權
-
-MIT License
